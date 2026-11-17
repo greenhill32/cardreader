@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'dcs-card-reader-v1';
+const CACHE = 'dcs-card-reader-v2';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.json', './icon.svg', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
