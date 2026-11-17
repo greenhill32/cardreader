@@ -136,6 +136,29 @@ document.querySelectorAll('[data-copy]').forEach(button => button.addEventListen
   const field = button.dataset.copy;
   if (current && (field === 'attr5' || field === 'attr6')) copyText(field === 'attr5' ? current.decimal : current.colon);
 }));
+function formatCardDetails(record) {
+  return `DCS Card Reader
+extensionAttribute5: ${record.decimal}
+extensionAttribute6: ${record.colon}`;
+}
+$('shareTeamsBtn').addEventListener('click', async () => {
+  if (!current) return;
+  const message = formatCardDetails(current);
+  if (typeof navigator.share === 'function') {
+    try {
+      await navigator.share({ text: message });
+      // The browser does not confirm which app or recipient was used.
+      setStatus('Share sheet closed. Check Teams to confirm the message was sent.');
+    } catch (error) {
+      if (error.name === 'AbortError') setStatus('Sharing cancelled.');
+      else setStatus('Unable to open sharing. Use Copy both attributes instead.', true);
+    }
+  } else {
+    await copyText(message);
+    setStatus('Sharing is unsupported here. Card details copied; paste them into Teams.');
+  }
+});
+
 $('copyBothBtn').addEventListener('click', () => {
   if (current) copyText(`extensionAttribute5: ${current.decimal}\nextensionAttribute6: ${current.colon}`);
 });
